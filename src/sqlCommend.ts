@@ -1,18 +1,21 @@
 import { PassThrough } from "stream";
-import { LiveMessage, LiveStatus } from "./dataFormat";
+import { AnchorInfo, LiveMessage, LiveStatus } from "./dataFormat";
 
 class SqlCmd {
 
     private databaseName:string = '';
     private liveStatuseTableName:string = '';
     private liveMessageTableName:string = '';
+    private anchorInfoTableName:string = '';
 
     constructor(databaseNmae:string, 
         liveMessageTableName:string, 
-        liveStatuseTableName:string){
+        liveStatuseTableName:string,
+        anchorInfoTableName:string){
         this.databaseName = databaseNmae;
         this.liveStatuseTableName = liveStatuseTableName;
         this.liveMessageTableName = liveMessageTableName;
+        this.anchorInfoTableName = anchorInfoTableName;
     }
 
     public createDatabase(){
@@ -56,6 +59,14 @@ class SqlCmd {
         )`
         return cmd;
     }
+    public createAnchorInfo(){
+        const cmd = `CREATE TABLE IF NOT EXISTS ${this.anchorInfoTableName} (
+            WechatUin VARCHAR(35) NOT NULL,
+            Nickname VARCHAR(35),
+            UNIQUE (WechatUin)
+        )`
+        return cmd;
+    }
 
     public insertLiveStatus(liveStatus: LiveStatus){
         const cmd = `INSERT INTO ${this.liveStatuseTableName} (WechatUin, LiveID, LikeCount, OnlineCount, RewardTotalAmountInWecoin, StartTimestamp, StartDateStr, StartTimeStr, CurrentTimestamp, CurrentDateStr, CurrentTimeStr, LiveTimestamp, LiveTimestr) VALUES ("${liveStatus.wechatUin}", "${liveStatus.liveID}", ${liveStatus.likeCount}, ${liveStatus.onlineCount}, ${liveStatus.rewardTotalAmountInWecoin}, ${liveStatus.startTimestamp}, "${liveStatus.startDateStr}", "${liveStatus.startTimeStr}", ${liveStatus.currentTimeStamp}, "${liveStatus.currentDateStr}", "${liveStatus.currentTimeStr}", ${liveStatus.liveTimestamp}, "${liveStatus.liveTimeStr}")`;
@@ -63,6 +74,10 @@ class SqlCmd {
     }
     public insertLiveMessage(liveMessage: LiveMessage){
         const cmd = `INSERT INTO ${this.liveMessageTableName} (LiveID, UserSeq, UserOpenID, UserNickName, MessageTimestamp, MessageDateStr, MessageTimeStr, MessageType, MessageContent) VALUES ("${liveMessage.liveID}", ${liveMessage.userSeq}, "${liveMessage.userOpenID}", "${liveMessage.userNickName}", ${liveMessage.messageTimestamp}, "${liveMessage.messageDateStr}", "${liveMessage.messageTimeStr}", "${liveMessage.messageType}", "${liveMessage.messageContent}")`;
+        return cmd;
+    }
+    public insertAnchorInfo(anchorInfo: AnchorInfo){
+        const cmd = `INSERT INTO ${this.anchorInfoTableName} (WechatUin, Nickname) VALUES ("${anchorInfo.wechatUin}", "${anchorInfo.nickname}") ON DUPLICATE KEY UPDATE Nickname = VALUES(Nickname)`;
         return cmd;
     }
 };

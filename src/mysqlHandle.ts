@@ -1,19 +1,19 @@
 import * as mysql from 'mysql';
 import SqlCmd from './sqlCommend';
-import { LiveMessage, LiveStatus } from './dataFormat';
+import { LiveMessage, LiveStatus, AnchorInfo } from './dataFormat';
 
 export default class MySQLHandler {
   private connection: mysql.Connection;
   private sqlCmd: SqlCmd;
 
-  constructor(host: string, port: number, user: string, password: string, database: string, liveMessageTableName:string, liveStatusTableName:string) {
+  constructor(host: string, port: number, user: string, password: string, database: string, liveMessageTableName:string, liveStatusTableName:string, anchorInfoTableName:string) {
     this.connection = mysql.createConnection({
       host: host,
       port: port,
       user: user,
       password: password
     });
-    this.sqlCmd = new SqlCmd(database, liveMessageTableName, liveStatusTableName);
+    this.sqlCmd = new SqlCmd(database, liveMessageTableName, liveStatusTableName, anchorInfoTableName);
     this.connection.connect((err) => {
       if (err) {
         return console.error('错误: ' + err.message);
@@ -33,10 +33,26 @@ export default class MySQLHandler {
     this.connection.query(this.sqlCmd.createLiveStatusTable(), (err, result) => {
       if (err) throw err;
     });
-    // 检查信息表是否存在
+    // 检查弹幕表是否存在
     this.connection.query(this.sqlCmd.createLiveMessageTable(), (err, result) => {
       if (err) throw err;
     });
+    // 检查主播信息表是否存在
+    this.connection.query(this.sqlCmd.createAnchorInfo(), (err, result) => {
+      if (err) throw err;
+    });
+  }
+
+  public insertAnchorInfo(anchorInfo: AnchorInfo): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.connection.query(this.sqlCmd.insertAnchorInfo(anchorInfo), (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    })
   }
 
   public insertLiveMessage(liveMessage: LiveMessage): Promise<void> {

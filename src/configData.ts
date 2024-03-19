@@ -6,6 +6,7 @@ export interface ConfigProps{
     databaseName:string;
     liveStatuseTableName:string;
     liveMessageTableName:string;
+    anchorInfoTableName:string;
 }
 
 export default class ConfigData {
@@ -16,7 +17,8 @@ export default class ConfigData {
         databasePassword:'admin=wuxiang.',
         databaseName:'wuxiang_live',
         liveStatuseTableName:'live_status',
-        liveMessageTableName:'live_message'
+        liveMessageTableName:'live_message',
+        anchorInfoTableName:'anchor_info',
     }
 
     public getConfig():ConfigProps{

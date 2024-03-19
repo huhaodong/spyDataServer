@@ -29,14 +29,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mysql = __importStar(require("mysql"));
 const sqlCommend_1 = __importDefault(require("./sqlCommend"));
 class MySQLHandler {
-    constructor(host, port, user, password, database, liveMessageTableName, liveStatusTableName) {
+    constructor(host, port, user, password, database, liveMessageTableName, liveStatusTableName, anchorInfoTableName) {
         this.connection = mysql.createConnection({
             host: host,
             port: port,
             user: user,
             password: password
         });
-        this.sqlCmd = new sqlCommend_1.default(database, liveMessageTableName, liveStatusTableName);
+        this.sqlCmd = new sqlCommend_1.default(database, liveMessageTableName, liveStatusTableName, anchorInfoTableName);
         this.connection.connect((err) => {
             if (err) {
                 return console.error('错误: ' + err.message);
@@ -59,10 +59,27 @@ class MySQLHandler {
             if (err)
                 throw err;
         });
-        // 检查信息表是否存在
+        // 检查弹幕表是否存在
         this.connection.query(this.sqlCmd.createLiveMessageTable(), (err, result) => {
             if (err)
                 throw err;
+        });
+        // 检查主播信息表是否存在
+        this.connection.query(this.sqlCmd.createAnchorInfo(), (err, result) => {
+            if (err)
+                throw err;
+        });
+    }
+    insertAnchorInfo(anchorInfo) {
+        return new Promise((resolve, reject) => {
+            this.connection.query(this.sqlCmd.insertAnchorInfo(anchorInfo), (err, result) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
         });
     }
     insertLiveMessage(liveMessage) {

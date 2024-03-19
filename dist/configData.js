@@ -9,7 +9,8 @@ class ConfigData {
             databasePassword: 'admin=wuxiang.',
             databaseName: 'wuxiang_live',
             liveStatuseTableName: 'live_status',
-            liveMessageTableName: 'live_message'
+            liveMessageTableName: 'live_message',
+            anchorInfoTableName: 'anchor_info',
         };
     }
     getConfig() {

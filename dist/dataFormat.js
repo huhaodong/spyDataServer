@@ -1,6 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatFromMessageBody = exports.formatFromeStatusBody = void 0;
+exports.formatFromMessageBody = exports.formatFromeStatusBody = exports.formatFromAnchorInfo = void 0;
+function formatFromAnchorInfo(body) {
+    return new Promise((resolve, reject) => {
+        try {
+            const ret = {};
+            ret.wechatUin = body.wechatUin;
+            ret.nickname = body.nickname;
+            resolve(ret);
+        }
+        catch (error) {
+            reject(error);
+        }
+    });
+}
+exports.formatFromAnchorInfo = formatFromAnchorInfo;
 function formatFromeStatusBody(body) {
     return new Promise((resolve, reject) => {
         try {

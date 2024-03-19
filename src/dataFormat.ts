@@ -26,11 +26,28 @@ export interface LiveMessage{
     messageContent:string;
 }
 
+export interface AnchorInfo{
+    wechatUin:string;
+    nickname:string;
+}
+
 export interface ResponseData{
     status:number;//0正常，-1error
     message:string;//回复信息
 }
 
+export function formatFromAnchorInfo(body): Promise<AnchorInfo>{
+    return new Promise((resolve,reject)=>{
+        try {
+            const ret = {} as AnchorInfo;
+            ret.wechatUin = body.wechatUin;
+            ret.nickname = body.nickname;
+            resolve(ret);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
 
 export function formatFromeStatusBody(body): Promise<LiveStatus>{
     return new Promise((resolve,reject)=>{
