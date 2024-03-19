@@ -41,8 +41,8 @@ class SqlCmd {
         const cmd = `CREATE TABLE IF NOT EXISTS ${this.liveMessageTableName} (
             LiveID VARCHAR(35),
             UserSeq INT,
-            UserOpenID VARCHAR(35),
-            UserNickname VARCHAR(35),
+            UserOpenID VARCHAR(255),
+            UserNickname VARCHAR(255),
             MessageTimestamp BIGINT,
             MessageDateStr VARCHAR(35),
             MessageTimeStr VARCHAR(35),
@@ -53,8 +53,8 @@ class SqlCmd {
     }
     createAnchorInfo() {
         const cmd = `CREATE TABLE IF NOT EXISTS ${this.anchorInfoTableName} (
-            WechatUin VARCHAR(35) NOT NULL,
-            Nickname VARCHAR(35),
+            WechatUin VARCHAR(255) NOT NULL,
+            Nickname VARCHAR(255),
             UNIQUE (WechatUin)
         )`;
         return cmd;
