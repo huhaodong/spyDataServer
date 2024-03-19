@@ -34,7 +34,8 @@ class MySQLHandler {
             host: host,
             port: port,
             user: user,
-            password: password
+            password: password,
+            charsets: 'utf8mb4'
         });
         this.sqlCmd = new sqlCommend_1.default(database, liveMessageTableName, liveStatusTableName, anchorInfoTableName);
         this.connection.connect((err) => {
