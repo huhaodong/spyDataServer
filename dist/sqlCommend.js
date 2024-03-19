@@ -1,30 +1,23 @@
-import { PassThrough } from "stream";
-import { LiveMessage, LiveStatus } from "./dataFormat";
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 class SqlCmd {
-
-    private databaseName:string = '';
-    private liveStatuseTableName:string = '';
-    private liveMessageTableName:string = '';
-
-    constructor(databaseNmae:string, 
-        liveMessageTableName:string, 
-        liveStatuseTableName:string){
+    constructor(databaseNmae, liveMessageTableName, liveStatuseTableName) {
+        this.databaseName = '';
+        this.liveStatuseTableName = '';
+        this.liveMessageTableName = '';
         this.databaseName = databaseNmae;
         this.liveStatuseTableName = liveStatuseTableName;
         this.liveMessageTableName = liveMessageTableName;
     }
-
-    public createDatabase(){
+    createDatabase() {
         const cmd = `CREATE DATABASE IF NOT EXISTS ${this.databaseName}`;
         return cmd;
     }
-
-    public useDatabase(){
+    useDatabase() {
         const cmd = `USE ${this.databaseName}`;
         return cmd;
     }
-    public createLiveStatusTable(){
+    createLiveStatusTable() {
         const cmd = `CREATE TABLE IF NOT EXISTS ${this.liveStatuseTableName} (
             WechatUin VARCHAR(35),
             LiveID VARCHAR(35),
@@ -39,10 +32,10 @@ class SqlCmd {
             CurrentTimeStr VARCHAR(35),
             LiveTimestamp BIGINT,
             LiveTimestr VARCHAR(25)
-        )`
+        )`;
         return cmd;
     }
-    public createLiveMessageTable(){
+    createLiveMessageTable() {
         const cmd = `CREATE TABLE IF NOT EXISTS ${this.liveMessageTableName} (
             LiveID VARCHAR(35),
             UserSeq INT,
@@ -53,17 +46,18 @@ class SqlCmd {
             MessageTimeStr VARCHAR(35),
             MessageType VARCHAR(25),
             MessageContent TEXT
-        )`
+        )`;
         return cmd;
     }
-
-    public insertLiveStatus(liveStatus: LiveStatus){
+    insertLiveStatus(liveStatus) {
         const cmd = `INSERT INTO ${this.liveStatuseTableName} (WechatUin, LiveID, LikeCount, OnlineCount, RewardTotalAmountInWecoin, StartTimestamp, StartDateStr, StartTimeStr, CurrentTimestamp, CurrentDateStr, CurrentTimeStr, LiveTimestamp, LiveTimestr) VALUES ("${liveStatus.wechatUin}", "${liveStatus.liveID}", ${liveStatus.likeCount}, ${liveStatus.onlineCount}, ${liveStatus.rewardTotalAmountInWecoin}, ${liveStatus.startTimestamp}, "${liveStatus.startDateStr}", "${liveStatus.startTimeStr}", ${liveStatus.currentTimeStamp}, "${liveStatus.currentDateStr}", "${liveStatus.currentTimeStr}", ${liveStatus.liveTimestamp}, "${liveStatus.liveTimeStr}")`;
         return cmd;
     }
-    public insertLiveMessage(liveMessage: LiveMessage){
+    insertLiveMessage(liveMessage) {
         const cmd = `INSERT INTO ${this.liveMessageTableName} (LiveID, UserSeq, UserOpenID, UserNickName, MessageTimestamp, MessageDateStr, MessageTimeStr, MessageType, MessageContent) VALUES ("${liveMessage.liveID}", ${liveMessage.userSeq}, "${liveMessage.userOpenID}", "${liveMessage.userNickName}", ${liveMessage.messageTimestamp}, "${liveMessage.messageDateStr}", "${liveMessage.messageTimeStr}", "${liveMessage.messageType}", "${liveMessage.messageContent}")`;
         return cmd;
     }
-};
-export default SqlCmd;
+}
+;
+exports.default = SqlCmd;
+//# sourceMappingURL=sqlCommend.js.map

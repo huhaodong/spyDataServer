@@ -2,22 +2,20 @@ import express from 'express';
 import { json } from 'body-parser';
 import MySQLHandler from './mysqlHandle';
 import ConfigData from './configData';
-import { LiveMessage, LiveStatus, responseData, DataFormater } from './dataFormat';
+import { LiveMessage, LiveStatus, ResponseData, formatFromeStatusBody, formatFromMessageBody } from './dataFormat';
 
 const config = new ConfigData();
 const configData = config.getConfig();
-let sqlH = new MySQLHandler(configData.databaseHost, configData.databaseUser, configData.databasePassword, configData.databaseName, configData.liveMessageTableName, configData.liveStatuseTableName);
+let sqlH = new MySQLHandler(configData.databaseHost, configData.databasePort, configData.databaseUser, configData.databasePassword, configData.databaseName, configData.liveMessageTableName, configData.liveStatuseTableName);
 
 const app = express();
 app.use(json());
 
-const dataformater = new DataFormater();
-
 // 接收客户端发送的直播间状态数据并存储到MySQL
 app.post('/livestatus', (req, res) => {
-  const re = {} as responseData;
+  const re = {} as ResponseData;
 
-  dataformater.formatLiveStatus(req.body)
+  formatFromeStatusBody(req.body)
   .then((liveStatusData) => {
     sqlH.insertLiveStatus(liveStatusData)
     .then(() => {
@@ -26,6 +24,7 @@ app.post('/livestatus', (req, res) => {
       res.send(re);
     })
     .catch((error) => {
+      console.error(error);
       re.status = -1;
       re.message = "live status data saved error!";
       res.send(re);
@@ -38,9 +37,9 @@ app.post('/livestatus', (req, res) => {
 
 // 接收客户端发送的直播间弹幕数据并存储到MySQL
 app.post('/livemessage', (req, res) => {
-  const re = {} as responseData;
+  const re = {} as ResponseData;
 
-  dataformater.formatFromMessageBody(req.body)
+  formatFromMessageBody(req.body)
   .then((liveMessageData) => {
     sqlH.insertLiveMessage(liveMessageData)
     .then(() => {
@@ -49,6 +48,7 @@ app.post('/livemessage', (req, res) => {
       res.send(re);
     })
     .catch((error) => {
+      console.error(error);
       re.status = -1;
       re.message = "live message data saved error!";
       res.send(re);
@@ -61,7 +61,7 @@ app.post('/livemessage', (req, res) => {
 
 // 测试联通性
 app.get('/ping', (req, res) => {
-  const re = {} as responseData;
+  const re = {} as ResponseData;
   re.status = 0;
   re.message = "pong";
   res.send(re);

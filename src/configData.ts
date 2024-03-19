@@ -1,5 +1,6 @@
 export interface ConfigProps{
     databaseHost:string;
+    databasePort:number;
     databaseUser:string;
     databasePassword:string;
     databaseName:string;
@@ -10,6 +11,7 @@ export interface ConfigProps{
 export default class ConfigData {
     private config: ConfigProps={
         databaseHost:'localhost',
+        databasePort:3306,
         databaseUser:'root',
         databasePassword:'admin=wuxiang.',
         databaseName:'wuxiang_live',

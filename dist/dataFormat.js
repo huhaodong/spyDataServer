@@ -1,41 +1,10 @@
-export interface LiveStatus{
-    wechatUin:string;
-    liveID:string;
-    likeCount:number;
-    onlineCount:number;
-    rewardTotalAmountInWecoin:number;
-    startTimestamp:number;
-    startDateStr:string;
-    startTimeStr:string;
-    currentTimeStamp:number;
-    currentDateStr:string;
-    currentTimeStr:string;
-    liveTimestamp:number;
-    liveTimeStr:string;
-}
-
-export interface LiveMessage{
-    liveID:string;
-    userSeq:number;
-    userOpenID:string;
-    userNickName:string;
-    messageTimestamp:number;
-    messageDateStr:string;
-    messageTimeStr:string;
-    messageType:string;
-    messageContent:string;
-}
-
-export interface ResponseData{
-    status:number;//0正常，-1error
-    message:string;//回复信息
-}
-
-
-export function formatFromeStatusBody(body): Promise<LiveStatus>{
-    return new Promise((resolve,reject)=>{
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.formatFromMessageBody = exports.formatFromeStatusBody = void 0;
+function formatFromeStatusBody(body) {
+    return new Promise((resolve, reject) => {
         try {
-            const ret = {} as LiveStatus;
+            const ret = {};
             ret.wechatUin = body.wechatUin;
             ret.liveID = body.liveID;
             ret.likeCount = body.likeCount;
@@ -50,16 +19,17 @@ export function formatFromeStatusBody(body): Promise<LiveStatus>{
             ret.liveTimestamp = body.liveTimestamp;
             ret.liveTimeStr = body.liveTimeStr;
             resolve(ret);
-        } catch (error) {
+        }
+        catch (error) {
             reject(error);
         }
     });
 }
-
-export function formatFromMessageBody(body): Promise<LiveMessage>{
+exports.formatFromeStatusBody = formatFromeStatusBody;
+function formatFromMessageBody(body) {
     return new Promise((resolve, reject) => {
         try {
-            const ret = {} as LiveMessage;
+            const ret = {};
             ret.liveID = body.liveID;
             ret.userSeq = body.userSeq;
             ret.userOpenID = body.userOpenID;
@@ -70,8 +40,11 @@ export function formatFromMessageBody(body): Promise<LiveMessage>{
             ret.messageType = body.messageType;
             ret.messageContent = body.messageContent;
             resolve(ret);
-        } catch (error) {
+        }
+        catch (error) {
             reject(error);
         }
-    });  
+    });
 }
+exports.formatFromMessageBody = formatFromMessageBody;
+//# sourceMappingURL=dataFormat.js.map

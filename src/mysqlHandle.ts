@@ -6,9 +6,10 @@ export default class MySQLHandler {
   private connection: mysql.Connection;
   private sqlCmd: SqlCmd;
 
-  constructor(host: string, user: string, password: string, database: string, liveMessageTableName:string, liveStatusTableName:string) {
+  constructor(host: string, port: number, user: string, password: string, database: string, liveMessageTableName:string, liveStatusTableName:string) {
     this.connection = mysql.createConnection({
       host: host,
+      port: port,
       user: user,
       password: password
     });
@@ -47,7 +48,7 @@ export default class MySQLHandler {
           resolve();
         }
       });
-    }
+    })
   }
 
   public insertLiveStatus(liveStatus: LiveStatus): Promise<void> {
@@ -58,7 +59,7 @@ export default class MySQLHandler {
         } else {
           resolve();
         }
-      }
-    }
+      })
+    })
   }
 }
