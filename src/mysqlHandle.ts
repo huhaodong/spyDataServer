@@ -6,7 +6,7 @@ export default class MySQLHandler {
   private connection: mysql.Connection;
   private sqlCmd: SqlCmd;
 
-  constructor(host: string, port: number, user: string, password: string, database: string, liveMessageTableName:string, liveStatusTableName:string, anchorInfoTableName:string) {
+  constructor(host: string, port: number, user: string, password: string, database: string, liveMessageTableName:string, liveStatusTableName:string, anchorInfoTableName:string, staffInfoTableName:string) {
     this.connection = mysql.createConnection({
       host: host,
       port: port,
@@ -14,7 +14,7 @@ export default class MySQLHandler {
       password: password,
       charsets: 'utf8mb4'
     });
-    this.sqlCmd = new SqlCmd(database, liveMessageTableName, liveStatusTableName, anchorInfoTableName);
+    this.sqlCmd = new SqlCmd(database, liveMessageTableName, liveStatusTableName, anchorInfoTableName, staffInfoTableName);
     this.connection.connect((err) => {
       if (err) {
         return console.error('错误: ' + err.message);
@@ -40,6 +40,10 @@ export default class MySQLHandler {
     });
     // 检查主播信息表是否存在
     this.connection.query(this.sqlCmd.createAnchorInfo(), (err, result) => {
+      if (err) throw err;
+    });
+    // 检查雇员信息表是否存在
+    this.connection.query(this.sqlCmd.createStaffInfo(), (err, result) => {
       if (err) throw err;
     });
   }

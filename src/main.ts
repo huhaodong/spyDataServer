@@ -6,7 +6,7 @@ import { LiveMessage, LiveStatus, ResponseData, formatFromeStatusBody, formatFro
 
 const config = new ConfigData();
 const configData = config.getConfig();
-let sqlH = new MySQLHandler(configData.databaseHost, configData.databasePort, configData.databaseUser, configData.databasePassword, configData.databaseName, configData.liveMessageTableName, configData.liveStatuseTableName, configData.anchorInfoTableName);
+let sqlH = new MySQLHandler(configData.databaseHost, configData.databasePort, configData.databaseUser, configData.databasePassword, configData.databaseName, configData.liveMessageTableName, configData.liveStatuseTableName, configData.anchorInfoTableName, configData.staffInfoTableName);
 
 const app = express();
 app.use(json());

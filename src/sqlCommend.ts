@@ -7,15 +7,18 @@ class SqlCmd {
     private liveStatuseTableName:string = '';
     private liveMessageTableName:string = '';
     private anchorInfoTableName:string = '';
+    private staffInfoTableName:string = '';
 
     constructor(databaseNmae:string, 
         liveMessageTableName:string, 
         liveStatuseTableName:string,
-        anchorInfoTableName:string){
+        anchorInfoTableName:string,
+        staffInfoTableName:string){
         this.databaseName = databaseNmae;
         this.liveStatuseTableName = liveStatuseTableName;
         this.liveMessageTableName = liveMessageTableName;
         this.anchorInfoTableName = anchorInfoTableName;
+        this.staffInfoTableName = staffInfoTableName;
     }
 
     public createDatabase(){
@@ -63,7 +66,22 @@ class SqlCmd {
         const cmd = `CREATE TABLE IF NOT EXISTS ${this.anchorInfoTableName} (
             WechatUin VARCHAR(255) NOT NULL,
             Nickname VARCHAR(255),
+            Sex VARCHAR(15),
+            Age INT,
+            SupervisorID INT,
+            Dividends INT DEFAULT 30,
             UNIQUE (WechatUin)
+        )`
+        return cmd;
+    }
+    public createStaffInfo(){
+        const cmd = `CREATE TABLE IF NOT EXISTS ${this.staffInfoTableName} (
+            ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            Name VARCHAR(255),
+            Sex VARCHAR(15),
+            Age INT,
+            Department VARCHAR(255),
+            TEL VARCHAR(255)
         )`
         return cmd;
     }

@@ -1,15 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class SqlCmd {
-    constructor(databaseNmae, liveMessageTableName, liveStatuseTableName, anchorInfoTableName) {
+    constructor(databaseNmae, liveMessageTableName, liveStatuseTableName, anchorInfoTableName, staffInfoTableName) {
         this.databaseName = '';
         this.liveStatuseTableName = '';
         this.liveMessageTableName = '';
         this.anchorInfoTableName = '';
+        this.staffInfoTableName = '';
         this.databaseName = databaseNmae;
         this.liveStatuseTableName = liveStatuseTableName;
         this.liveMessageTableName = liveMessageTableName;
         this.anchorInfoTableName = anchorInfoTableName;
+        this.staffInfoTableName = staffInfoTableName;
     }
     createDatabase() {
         const cmd = `CREATE DATABASE IF NOT EXISTS ${this.databaseName}`;
@@ -55,7 +57,22 @@ class SqlCmd {
         const cmd = `CREATE TABLE IF NOT EXISTS ${this.anchorInfoTableName} (
             WechatUin VARCHAR(255) NOT NULL,
             Nickname VARCHAR(255),
+            Sex VARCHAR(15),
+            Age INT,
+            SupervisorID INT,
+            Dividends INT DEFAULT 30,
             UNIQUE (WechatUin)
+        )`;
+        return cmd;
+    }
+    createStaffInfo() {
+        const cmd = `CREATE TABLE IF NOT EXISTS ${this.staffInfoTableName} (
+            ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            Name VARCHAR(255),
+            Sex VARCHAR(15),
+            Age INT,
+            Department VARCHAR(255),
+            TEL VARCHAR(255)
         )`;
         return cmd;
     }

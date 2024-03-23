@@ -7,6 +7,7 @@ export interface ConfigProps{
     liveStatuseTableName:string;
     liveMessageTableName:string;
     anchorInfoTableName:string;
+    staffInfoTableName:string;
 }
 
 export default class ConfigData {
@@ -19,6 +20,7 @@ export default class ConfigData {
         liveStatuseTableName:'live_status',
         liveMessageTableName:'live_message',
         anchorInfoTableName:'anchor_info',
+        staffInfoTableName:'staff_info'
     }
 
     public getConfig():ConfigProps{

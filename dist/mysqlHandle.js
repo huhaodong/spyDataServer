@@ -29,7 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mysql = __importStar(require("mysql"));
 const sqlCommend_1 = __importDefault(require("./sqlCommend"));
 class MySQLHandler {
-    constructor(host, port, user, password, database, liveMessageTableName, liveStatusTableName, anchorInfoTableName) {
+    constructor(host, port, user, password, database, liveMessageTableName, liveStatusTableName, anchorInfoTableName, staffInfoTableName) {
         this.connection = mysql.createConnection({
             host: host,
             port: port,
@@ -37,7 +37,7 @@ class MySQLHandler {
             password: password,
             charsets: 'utf8mb4'
         });
-        this.sqlCmd = new sqlCommend_1.default(database, liveMessageTableName, liveStatusTableName, anchorInfoTableName);
+        this.sqlCmd = new sqlCommend_1.default(database, liveMessageTableName, liveStatusTableName, anchorInfoTableName, staffInfoTableName);
         this.connection.connect((err) => {
             if (err) {
                 return console.error('错误: ' + err.message);
@@ -67,6 +67,11 @@ class MySQLHandler {
         });
         // 检查主播信息表是否存在
         this.connection.query(this.sqlCmd.createAnchorInfo(), (err, result) => {
+            if (err)
+                throw err;
+        });
+        // 检查雇员信息表是否存在
+        this.connection.query(this.sqlCmd.createStaffInfo(), (err, result) => {
             if (err)
                 throw err;
         });

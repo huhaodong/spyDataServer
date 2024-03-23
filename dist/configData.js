@@ -11,6 +11,7 @@ class ConfigData {
             liveStatuseTableName: 'live_status',
             liveMessageTableName: 'live_message',
             anchorInfoTableName: 'anchor_info',
+            staffInfoTableName: 'staff_info'
         };
     }
     getConfig() {

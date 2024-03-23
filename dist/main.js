@@ -10,7 +10,7 @@ const configData_1 = __importDefault(require("./configData"));
 const dataFormat_1 = require("./dataFormat");
 const config = new configData_1.default();
 const configData = config.getConfig();
-let sqlH = new mysqlHandle_1.default(configData.databaseHost, configData.databasePort, configData.databaseUser, configData.databasePassword, configData.databaseName, configData.liveMessageTableName, configData.liveStatuseTableName, configData.anchorInfoTableName);
+let sqlH = new mysqlHandle_1.default(configData.databaseHost, configData.databasePort, configData.databaseUser, configData.databasePassword, configData.databaseName, configData.liveMessageTableName, configData.liveStatuseTableName, configData.anchorInfoTableName, configData.staffInfoTableName);
 const app = (0, express_1.default)();
 app.use((0, body_parser_1.json)());
 // 接收客户端发送的直播间状态数据并存储到MySQL
