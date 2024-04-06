@@ -1,6 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.formatFromMessageBody = exports.formatFromeStatusBody = exports.formatFromAnchorInfo = void 0;
+const configData_1 = __importDefault(require("./configData"));
+const config = new configData_1.default();
+const configData = config.getConfig();
 function formatFromAnchorInfo(body) {
     return new Promise((resolve, reject) => {
         try {
@@ -24,14 +30,24 @@ function formatFromeStatusBody(body) {
             ret.likeCount = body.likeCount;
             ret.onlineCount = body.onlineCount;
             ret.rewardTotalAmountInWecoin = body.rewardTotalAmountInWecoin;
+            // 将微信热度换算成人民币流水
+            ret.rewardRMB = ret.rewardTotalAmountInWecoin * configData.wxRewardDividends;
             ret.startTimestamp = body.startTimestamp;
             ret.startDateStr = body.startDateStr;
+            // 将横线分割的日期改成斜线分割的日期
+            ret.startDateSlashStr = ret.startDateStr.replace(/-/g, "/");
+            // 将横线分割的日期中的年和月切分出来
+            ret.startMounthStr = ret.startDateStr.split("-")[0] + "-" + ret.startDateStr.split("-")[1];
             ret.startTimeStr = body.startTimeStr;
             ret.currentTimeStamp = body.currentTimeStamp;
             ret.currentDateStr = body.currentDateStr;
             ret.currentTimeStr = body.currentTimeStr;
             ret.liveTimestamp = body.liveTimestamp;
+            // 将秒换算成时
+            ret.liveTimeHour = ret.liveTimestamp / 3600;
             ret.liveTimeStr = body.liveTimeStr;
+            // 视频号平台来的标记为视频号。
+            ret.thePlatform = configData.wxPlatform;
             resolve(ret);
         }
         catch (error) {

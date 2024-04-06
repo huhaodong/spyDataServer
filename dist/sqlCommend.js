@@ -1,17 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class SqlCmd {
-    constructor(databaseNmae, liveMessageTableName, liveStatuseTableName, anchorInfoTableName, staffInfoTableName) {
+    constructor(config) {
         this.databaseName = '';
         this.liveStatuseTableName = '';
         this.liveMessageTableName = '';
         this.anchorInfoTableName = '';
         this.staffInfoTableName = '';
-        this.databaseName = databaseNmae;
-        this.liveStatuseTableName = liveStatuseTableName;
-        this.liveMessageTableName = liveMessageTableName;
-        this.anchorInfoTableName = anchorInfoTableName;
-        this.staffInfoTableName = staffInfoTableName;
+        this.dailyRewardTableName = '';
+        this.OperationsTeamInfoTableName = '';
+        this.databaseName = config.databaseName;
+        this.liveStatuseTableName = config.liveStatuseTableName;
+        this.liveMessageTableName = config.liveMessageTableName;
+        this.anchorInfoTableName = config.anchorInfoTableName;
+        this.staffInfoTableName = config.staffInfoTableName;
+        this.dailyRewardTableName = config.dailyRewardTableName;
+        this.OperationsTeamInfoTableName = config.operationsTeamInfoTableName;
     }
     createDatabase() {
         const cmd = `CREATE DATABASE IF NOT EXISTS ${this.databaseName}`;
@@ -23,57 +27,105 @@ class SqlCmd {
     }
     createLiveStatusTable() {
         const cmd = `CREATE TABLE IF NOT EXISTS ${this.liveStatuseTableName} (
-            WechatUin VARCHAR(35),
-            LiveID VARCHAR(35),
-            LikeCount INT,
-            OnlineCount INT,
-            RewardTotalAmountInWecoin INT,
-            StartTimestamp BIGINT,
-            StartDateStr VARCHAR(35),
-            StartTimeStr VARCHAR(35),
-            CurrentTimestamp BIGINT,
-            CurrentDateStr VARCHAR(35),
-            CurrentTimeStr VARCHAR(35),
-            LiveTimestamp BIGINT,
-            LiveTimestr VARCHAR(25)
-        )`;
+          WechatUin varchar(35) DEFAULT NULL,
+          LiveID varchar(35) DEFAULT NULL,
+          LikeCount int DEFAULT NULL,
+          OnlineCount int DEFAULT NULL,
+          RewardTotalAmountInWecoin int DEFAULT NULL,
+          StartTimestamp bigint DEFAULT NULL,
+          StartDateStr varchar(35) DEFAULT NULL,
+          StartTimeStr varchar(35) DEFAULT NULL,
+          CurrentTimestamp bigint DEFAULT NULL,
+          CurrentDateStr varchar(35) DEFAULT NULL,
+          CurrentTimeStr varchar(35) DEFAULT NULL,
+          LiveTimestamp bigint DEFAULT NULL,
+          LiveTimestr varchar(25) DEFAULT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='保存所有微信视频号上的直播状态数据，条目众多，是实时数据';`;
         return cmd;
     }
     createLiveMessageTable() {
         const cmd = `CREATE TABLE IF NOT EXISTS ${this.liveMessageTableName} (
-            LiveID VARCHAR(35),
-            UserSeq INT,
-            UserOpenID VARCHAR(255),
-            UserNickname VARCHAR(255),
-            MessageTimestamp BIGINT,
-            MessageDateStr VARCHAR(35),
-            MessageTimeStr VARCHAR(35),
-            MessageType VARCHAR(25),
-            MessageContent TEXT
-        )`;
+          LiveID varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+          UserSeq int DEFAULT NULL,
+          UserOpenID varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+          UserNickname varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+          MessageTimestamp bigint DEFAULT NULL,
+          MessageDateStr varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+          MessageTimeStr varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+          MessageType varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+          MessageContent text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='保存所有从微信视频号来的弹幕信息';`;
         return cmd;
     }
     createAnchorInfo() {
         const cmd = `CREATE TABLE IF NOT EXISTS ${this.anchorInfoTableName} (
-            WechatUin VARCHAR(255) NOT NULL,
-            Nickname VARCHAR(255),
-            Sex VARCHAR(15),
-            Age INT,
-            SupervisorID INT,
-            Dividends INT DEFAULT 30,
-            UNIQUE (WechatUin)
-        )`;
+          WechatUin varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+          Nickname varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+          Sex varchar(15) DEFAULT NULL,
+          Age int DEFAULT NULL,
+          SpervisorID int DEFAULT NULL,
+          Dividends float DEFAULT '0',
+          Name varchar(255) DEFAULT NULL,
+          Status varchar(50) DEFAULT NULL,
+          WorkTime varchar(100) DEFAULT NULL,
+          GuaranteedSalary float DEFAULT '0',
+          GuaranteedTime varchar(100) DEFAULT NULL,
+          AnchorBelongs varchar(255) DEFAULT NULL,
+          OperationsTeam varchar(255) DEFAULT NULL,
+          OperationsTeamID int DEFAULT NULL,
+          SpervisorName varchar(255) DEFAULT NULL,
+          LivePlatform varchar(255) DEFAULT NULL,
+          LiveFormat varchar(255) DEFAULT NULL,
+          WXHyperlinks varchar(255) DEFAULT NULL,
+          DYHyperlinks varchar(255) DEFAULT NULL,
+          ContractDuration int DEFAULT NULL,
+          ContractStartTime varchar(100) DEFAULT NULL,
+          ContractEndTime varchar(100) DEFAULT NULL,
+          DouyinUin varchar(255) DEFAULT NULL,
+          PRIMARY KEY (Nickname),
+          UNIQUE KEY anchor_info_unique (WechatUin),
+          UNIQUE KEY anchor_info_unique_1 (DouyinUin)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='主播信息表';`;
         return cmd;
     }
     createStaffInfo() {
         const cmd = `CREATE TABLE IF NOT EXISTS ${this.staffInfoTableName} (
-            ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            Name VARCHAR(255),
-            Sex VARCHAR(15),
-            Age INT,
-            Department VARCHAR(255),
-            TEL VARCHAR(255)
-        )`;
+          ID int NOT NULL AUTO_INCREMENT,
+          Name varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+          Sex varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+          Age int DEFAULT NULL,
+          Department varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+          TEL varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+          OpreationsTeam varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+          OperationsTeamID int DEFAULT NULL,
+          PRIMARY KEY (ID)
+        ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='员工信息，管理员信息';`;
+        return cmd;
+    }
+    createOperationsTeamInfo() {
+        const cmd = `CREATE TABLE IF NOT EXISTS ${this.OperationsTeamInfoTableName} (
+          ID int NOT NULL AUTO_INCREMENT,
+          OperationsTeam varchar(100) NOT NULL,
+          Dividends float NOT NULL,
+          PRIMARY KEY (ID)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='运营团队信息';`;
+        return cmd;
+    }
+    createDailyReward() {
+        const cmd = `CREATE TABLE IF NOT EXISTS ${this.dailyRewardTableName} (
+          LiveID varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+          AnchorNickname varchar(255) DEFAULT "UNKNOW",
+          ThePlatform varchar(100) DEFAULT NULL,
+          Reward double DEFAULT '0',
+          LiveTime double DEFAULT '0',
+          NumberOfViewers int DEFAULT '0',
+          Hyperlinks varchar(255) DEFAULT NULL,
+          StartLiveTimestamp bigint DEFAULT NULL,
+          DateStr varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+          MonthStr varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+          EndLiveTimestamp bigint DEFAULT NULL,
+          PRIMARY KEY (LiveID)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='这个表用来记录每日的流水信息，每场直播只会保留一条信息';`;
         return cmd;
     }
     insertLiveStatus(liveStatus) {
@@ -85,7 +137,18 @@ class SqlCmd {
         return cmd;
     }
     insertAnchorInfo(anchorInfo) {
-        const cmd = `INSERT INTO ${this.anchorInfoTableName} (WechatUin, Nickname) VALUES ("${anchorInfo.wechatUin}", "${anchorInfo.nickname}") ON DUPLICATE KEY UPDATE Nickname = VALUES(Nickname)`;
+        const cmd = `INSERT INTO ${this.anchorInfoTableName} 
+        (WechatUin, Nickname) 
+        VALUES ("${anchorInfo.wechatUin}", "${anchorInfo.nickname}") as new 
+        ON DUPLICATE KEY UPDATE Nickname = new.Nickname`;
+        return cmd;
+    }
+    insertDailyReward(liveStatus) {
+        const cmd = `insert into ${this.dailyRewardTableName} 
+        (AnchorNickname,ThePlatform,Reward,LiveTime,StartLiveTimestamp,DateStr,MonthStr,LiveID,EndLiveTimestamp) 
+        values ((select ifnull(a.Nickname,"${liveStatus.wechatUin}") from anchor_info as a where a.WechatUin = "${liveStatus.wechatUin}" limit 1),"${liveStatus.thePlatform}",${liveStatus.rewardRMB},${liveStatus.liveTimeHour},${liveStatus.startTimestamp},"${liveStatus.startDateSlashStr}","${liveStatus.startMounthStr}","${liveStatus.liveID}",${liveStatus.currentTimeStamp}) 
+        as new 
+        ON DUPLICATE KEY UPDATE Reward=new.Reward,LiveTime=new.LiveTime,EndLiveTimestamp=new.EndLiveTimestamp;`;
         return cmd;
     }
 }

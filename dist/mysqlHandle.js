@@ -29,15 +29,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mysql = __importStar(require("mysql"));
 const sqlCommend_1 = __importDefault(require("./sqlCommend"));
 class MySQLHandler {
-    constructor(host, port, user, password, database, liveMessageTableName, liveStatusTableName, anchorInfoTableName, staffInfoTableName) {
+    constructor(conifg) {
         this.connection = mysql.createConnection({
-            host: host,
-            port: port,
-            user: user,
-            password: password,
+            host: conifg.databaseHost,
+            port: conifg.databasePort,
+            user: conifg.databaseUser,
+            password: conifg.databasePassword,
             charsets: 'utf8mb4'
         });
-        this.sqlCmd = new sqlCommend_1.default(database, liveMessageTableName, liveStatusTableName, anchorInfoTableName, staffInfoTableName);
+        this.sqlCmd = new sqlCommend_1.default(conifg);
         this.connection.connect((err) => {
             if (err) {
                 return console.error('错误: ' + err.message);
@@ -75,6 +75,16 @@ class MySQLHandler {
             if (err)
                 throw err;
         });
+        // 检查日流水表是否存在
+        this.connection.query(this.sqlCmd.createDailyReward(), (err, result) => {
+            if (err)
+                throw err;
+        });
+        // 检查运运营团队信息表是否存在
+        this.connection.query(this.sqlCmd.createOperationsTeamInfo(), (err, result) => {
+            if (err)
+                throw err;
+        });
     }
     insertAnchorInfo(anchorInfo) {
         return new Promise((resolve, reject) => {
@@ -103,6 +113,18 @@ class MySQLHandler {
     insertLiveStatus(liveStatus) {
         return new Promise((resolve, reject) => {
             this.connection.query(this.sqlCmd.insertLiveStatus(liveStatus), (err, result) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
+    }
+    insertDailyReward(liveStatus) {
+        return new Promise((resolve, reject) => {
+            this.connection.query(this.sqlCmd.insertDailyReward(liveStatus), (err, result) => {
                 if (err) {
                     reject(err);
                 }

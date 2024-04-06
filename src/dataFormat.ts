@@ -1,17 +1,27 @@
+import ConfigData from "./configData";
+
+const config = new ConfigData();
+const configData = config.getConfig();
+
 export interface LiveStatus{
     wechatUin:string;
     liveID:string;
     likeCount:number;
     onlineCount:number;
     rewardTotalAmountInWecoin:number;
+    rewardRMB:number;
     startTimestamp:number;
     startDateStr:string;
+    startDateSlashStr:string;
+    startMounthStr:string;
     startTimeStr:string;
     currentTimeStamp:number;
     currentDateStr:string;
     currentTimeStr:string;
     liveTimestamp:number;
     liveTimeStr:string;
+    liveTimeHour:number;
+    thePlatform:string;
 }
 
 export interface LiveMessage{
@@ -58,14 +68,24 @@ export function formatFromeStatusBody(body): Promise<LiveStatus>{
             ret.likeCount = body.likeCount;
             ret.onlineCount = body.onlineCount;
             ret.rewardTotalAmountInWecoin = body.rewardTotalAmountInWecoin;
+            // 将微信热度换算成人民币流水
+            ret.rewardRMB = ret.rewardTotalAmountInWecoin*configData.wxRewardDividends;
             ret.startTimestamp = body.startTimestamp;
             ret.startDateStr = body.startDateStr;
+            // 将横线分割的日期改成斜线分割的日期
+            ret.startDateSlashStr = ret.startDateStr.replace(/-/g, "/");
+            // 将横线分割的日期中的年和月切分出来
+            ret.startMounthStr = ret.startDateStr.split("-")[0]+"-"+ret.startDateStr.split("-")[1];
             ret.startTimeStr = body.startTimeStr;
             ret.currentTimeStamp = body.currentTimeStamp;
             ret.currentDateStr = body.currentDateStr;
             ret.currentTimeStr = body.currentTimeStr;
             ret.liveTimestamp = body.liveTimestamp;
+            // 将秒换算成时
+            ret.liveTimeHour = ret.liveTimestamp/3600;
             ret.liveTimeStr = body.liveTimeStr;
+            // 视频号平台来的标记为视频号。
+            ret.thePlatform = configData.wxPlatform;
             resolve(ret);
         } catch (error) {
             reject(error);

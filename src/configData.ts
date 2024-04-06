@@ -8,19 +8,29 @@ export interface ConfigProps{
     liveMessageTableName:string;
     anchorInfoTableName:string;
     staffInfoTableName:string;
+    operationsTeamInfoTableName:string;
+    dailyRewardTableName:string;
+    wxRewardDividends:number;
+    wxPlatform:string;
+    dyPlatform:string;
 }
 
 export default class ConfigData {
     private config: ConfigProps={
-        databaseHost:'localhost',
-        databasePort:3306,
+        databaseHost:'192.168.1.11',
+        databasePort:3307,
         databaseUser:'root',
-        databasePassword:'admin=wuxiang.',
+        databasePassword:'admin!wuxiang',
         databaseName:'wuxiang_live',
-        liveStatuseTableName:'live_status',
-        liveMessageTableName:'live_message',
+        liveStatuseTableName:'live_status_wx',
+        liveMessageTableName:'live_message_wx',
         anchorInfoTableName:'anchor_info',
-        staffInfoTableName:'staff_info'
+        staffInfoTableName:'staff_info',
+        operationsTeamInfoTableName:'operations_team_info',
+        dailyRewardTableName:'daily_reward',
+        wxRewardDividends:0.1,
+        wxPlatform:"视频号",
+        dyPlatform:"抖音"
     }
 
     public getConfig():ConfigProps{

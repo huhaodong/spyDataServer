@@ -1,20 +1,21 @@
 import * as mysql from 'mysql';
 import SqlCmd from './sqlCommend';
 import { LiveMessage, LiveStatus, AnchorInfo } from './dataFormat';
+import { ConfigProps } from './configData';
 
 export default class MySQLHandler {
   private connection: mysql.Connection;
   private sqlCmd: SqlCmd;
 
-  constructor(host: string, port: number, user: string, password: string, database: string, liveMessageTableName:string, liveStatusTableName:string, anchorInfoTableName:string, staffInfoTableName:string) {
+  constructor(conifg: ConfigProps) {
     this.connection = mysql.createConnection({
-      host: host,
-      port: port,
-      user: user,
-      password: password,
+      host: conifg.databaseHost,
+      port: conifg.databasePort,
+      user: conifg.databaseUser,
+      password: conifg.databasePassword,
       charsets: 'utf8mb4'
     });
-    this.sqlCmd = new SqlCmd(database, liveMessageTableName, liveStatusTableName, anchorInfoTableName, staffInfoTableName);
+    this.sqlCmd = new SqlCmd(conifg);
     this.connection.connect((err) => {
       if (err) {
         return console.error('错误: ' + err.message);
@@ -46,6 +47,14 @@ export default class MySQLHandler {
     this.connection.query(this.sqlCmd.createStaffInfo(), (err, result) => {
       if (err) throw err;
     });
+    // 检查日流水表是否存在
+    this.connection.query(this.sqlCmd.createDailyReward(), (err, result) => {
+      if (err) throw err;
+    });
+    // 检查运运营团队信息表是否存在
+    this.connection.query(this.sqlCmd.createOperationsTeamInfo(), (err, result) => {
+      if (err) throw err;
+    });
   }
 
   public insertAnchorInfo(anchorInfo: AnchorInfo): Promise<void> {
@@ -75,6 +84,18 @@ export default class MySQLHandler {
   public insertLiveStatus(liveStatus: LiveStatus): Promise<void> {
     return new Promise((resolve, reject) => {
       this.connection.query(this.sqlCmd.insertLiveStatus(liveStatus), (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      })
+    })
+  }
+
+  public insertDailyReward(liveStatus: LiveStatus): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.connection.query(this.sqlCmd.insertDailyReward(liveStatus), (err, result) => {
         if (err) {
           reject(err);
         } else {
