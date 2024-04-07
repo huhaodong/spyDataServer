@@ -161,7 +161,7 @@ class SqlCmd {
     public insertDailyReward(liveStatus: LiveStatus){
         const cmd = `insert into ${this.dailyRewardTableName} 
         (AnchorNickname,ThePlatform,Reward,LiveTime,StartLiveTimestamp,DateStr,MonthStr,LiveID,EndLiveTimestamp) 
-        values ((select ifnull(a.Nickname,"${liveStatus.wechatUin}") from anchor_info as a where a.WechatUin = "${liveStatus.wechatUin}" limit 1),"${liveStatus.thePlatform}",${liveStatus.rewardRMB},${liveStatus.liveTimeHour},${liveStatus.startTimestamp},"${liveStatus.startDateSlashStr}","${liveStatus.startMounthStr}","${liveStatus.liveID}",${liveStatus.currentTimeStamp}) 
+        values ((select ifnull(a.Nickname,"${liveStatus.wechatUin}") from anchor_info as a where a.WechatUin = "${liveStatus.wechatUin}" limit 1),"${liveStatus.thePlatform}",${liveStatus.rewardRMB},${liveStatus.liveTimeHour},${liveStatus.startTimestamp},"${liveStatus.startDateStr}","${liveStatus.startMounthStr}","${liveStatus.liveID}",${liveStatus.currentTimeStamp}) 
         as new 
         ON DUPLICATE KEY UPDATE AnchorNickname=new.AnchorNickname,Reward=new.Reward,LiveTime=new.LiveTime,EndLiveTimestamp=new.EndLiveTimestamp;`;
         return cmd;
