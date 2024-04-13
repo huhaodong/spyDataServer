@@ -32,7 +32,7 @@ class SqlCmd {
         return cmd;
     }
     public createLiveStatusTable(){
-        
+        // 原来的编码方式：utf8mb4_0900_ai_ci
         const cmd = `CREATE TABLE IF NOT EXISTS ${this.liveStatuseTableName} (
           WechatUin varchar(35) DEFAULT NULL,
           LiveID varchar(35) DEFAULT NULL,
@@ -47,7 +47,7 @@ class SqlCmd {
           CurrentTimeStr varchar(35) DEFAULT NULL,
           LiveTimestamp bigint DEFAULT NULL,
           LiveTimestr varchar(25) DEFAULT NULL
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='保存所有微信视频号上的直播状态数据，条目众多，是实时数据';`
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='保存所有微信视频号上的直播状态数据，条目众多，是实时数据';`
         return cmd;
     }
     public createLiveMessageTable(){
