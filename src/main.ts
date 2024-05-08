@@ -2,7 +2,7 @@ import express from 'express';
 import { json } from 'body-parser';
 import MySQLHandler from './mysqlHandle';
 import ConfigData from './configData';
-import { LiveMessage, LiveStatus, ResponseData, formatFromeStatusBody, formatFromMessageBody, formatFromAnchorInfo } from './dataFormat';
+import { LiveMessage, LiveStatus, ResponseData, formatFromeStatusBody, formatFromMessageBody, formatFromAnchorInfo, formatFromeWXDailyData, formatFromeDYDailyData } from './dataFormat';
 
 const config = new ConfigData();
 const configData = config.getConfig();
@@ -68,6 +68,56 @@ app.post('/livemessage', (req, res) => {
       console.error(error);
       re.status = -1;
       re.message = "live message data saved error!";
+      res.send(re);
+    }); 
+  })
+  .catch((error) => {
+    console.error(`get some error on post /livemessage : ${error}`)
+  });
+});
+
+// 接受视频号mcn账号抓取的直播间数据并存储到MySQL
+
+app.post('/wxdailyreward', (req, res) => {
+  const re = {} as ResponseData;
+
+  formatFromeWXDailyData(req.body)
+  .then((data) => {
+    sqlH.insertWXDailyReward(data)
+    .then(() => {
+      re.status = 0;
+      re.message = "weixin daily data saved successfully!";
+      res.send(re);
+    })
+    .catch((error) => {
+      console.error(error);
+      re.status = -1;
+      re.message = `weixin daily data saved error=>${error}`;
+      res.send(re);
+    }); 
+  })
+  .catch((error) => {
+    console.error(`get some error on post /livemessage : ${error}`)
+  });
+});
+
+// 接受抖音mcn账号抓取的直播间数据并存储到MySQL
+
+app.post('/dydailyreward', (req, res) => {
+  const re = {} as ResponseData;
+
+  formatFromeDYDailyData(req.body)
+  .then((data) => {
+    sqlH.insertDYDailyReward(data)
+    .then(() => {
+      re.status = 0;
+      re.message = "douyin daily data saved successfully!";
+      res.send(re);
+    })
+    .catch((error) => {
+      console.error(error);
+      re.status = -1;
+      re.message = `douyin daily data saved error=>${error}`;
       res.send(re);
     }); 
   })

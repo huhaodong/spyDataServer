@@ -1,6 +1,6 @@
 import * as mysql from 'mysql';
 import SqlCmd from './sqlCommend';
-import { LiveMessage, LiveStatus, AnchorInfo } from './dataFormat';
+import { LiveMessage, LiveStatus, AnchorInfo,DYDailyRewardData, WXDailyRewardData } from './dataFormat';
 import { ConfigProps } from './configData';
 
 export default class MySQLHandler {
@@ -55,6 +55,18 @@ export default class MySQLHandler {
     this.connection.query(this.sqlCmd.createOperationsTeamInfo(), (err, result) => {
       if (err) throw err;
     });
+    // 检查抖音日记录表是否存在
+    this.connection.query(this.sqlCmd.createDYDailyReward(), (err, result) => {
+      if (err) throw err;
+    });
+    // 检查视频号日记录表是否存在
+    this.connection.query(this.sqlCmd.createWXDailyReward(), (err, result) => {
+      if (err) throw err;
+    });
+    // 创建日收益视图
+    this.connection.query(this.sqlCmd.createDailyRewardView(), (err, result) => {
+      if (err) throw err;
+    });
   }
 
   public insertAnchorInfo(anchorInfo: AnchorInfo): Promise<void> {
@@ -84,6 +96,32 @@ export default class MySQLHandler {
   public insertLiveStatus(liveStatus: LiveStatus): Promise<void> {
     return new Promise((resolve, reject) => {
       this.connection.query(this.sqlCmd.insertLiveStatus(liveStatus), (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      })
+    })
+  }
+
+  // 插入抖音每日数据
+  public insertDYDailyReward(data: DYDailyRewardData): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.connection.query(this.sqlCmd.insertDYDailyReward(data), (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      })
+    })
+  }
+
+  // 插入视频号每日数据
+  public insertWXDailyReward(data: WXDailyRewardData): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.connection.query(this.sqlCmd.insertWXDailyReward(data), (err, result) => {
         if (err) {
           reject(err);
         } else {

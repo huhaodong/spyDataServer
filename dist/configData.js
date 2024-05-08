@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class ConfigData {
     constructor() {
         this.config = {
-            databaseHost: '127.0.0.1',
+            databaseHost: '192.168.1.106',
             databasePort: 3307,
             databaseUser: 'root',
             databasePassword: 'admin!wuxiang',
@@ -16,7 +16,9 @@ class ConfigData {
             dailyRewardTableName: 'daily_reward',
             wxRewardDividends: 0.1,
             wxPlatform: "视频号",
-            dyPlatform: "抖音"
+            dyPlatform: "抖音",
+            dyDailyRewardTableName: "dy_daily_reward",
+            wxDailyRewardTableName: "wx_daily_reward"
         };
     }
     getConfig() {

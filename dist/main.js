@@ -71,6 +71,50 @@ app.post('/livemessage', (req, res) => {
         console.error(`get some error on post /livemessage : ${error}`);
     });
 });
+// 接受视频号mcn账号抓取的直播间数据并存储到MySQL
+app.post('/wxdailyreward', (req, res) => {
+    const re = {};
+    (0, dataFormat_1.formatFromeWXDailyData)(req.body)
+        .then((data) => {
+        sqlH.insertWXDailyReward(data)
+            .then(() => {
+            re.status = 0;
+            re.message = "weixin daily data saved successfully!";
+            res.send(re);
+        })
+            .catch((error) => {
+            console.error(error);
+            re.status = -1;
+            re.message = `weixin daily data saved error=>${error}`;
+            res.send(re);
+        });
+    })
+        .catch((error) => {
+        console.error(`get some error on post /livemessage : ${error}`);
+    });
+});
+// 接受抖音mcn账号抓取的直播间数据并存储到MySQL
+app.post('/dydailyreward', (req, res) => {
+    const re = {};
+    (0, dataFormat_1.formatFromeDYDailyData)(req.body)
+        .then((data) => {
+        sqlH.insertDYDailyReward(data)
+            .then(() => {
+            re.status = 0;
+            re.message = "douyin daily data saved successfully!";
+            res.send(re);
+        })
+            .catch((error) => {
+            console.error(error);
+            re.status = -1;
+            re.message = `douyin daily data saved error=>${error}`;
+            res.send(re);
+        });
+    })
+        .catch((error) => {
+        console.error(`get some error on post /livemessage : ${error}`);
+    });
+});
 // 接收客户端发送的主播属性数据并存储到MySQL
 app.post('/anchorinfo', (req, res) => {
     const re = {};
