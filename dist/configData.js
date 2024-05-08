@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class ConfigData {
     constructor() {
         this.config = {
-            databaseHost: '192.168.1.106',
+            databaseHost: '127.0.0.1',
             databasePort: 3307,
             databaseUser: 'root',
             databasePassword: 'admin!wuxiang',
