@@ -149,6 +149,7 @@ class SqlCmd {
           anchorTotalIncome float DEFAULT '0' COMMENT '主播总收入',
           platform varchar(100) DEFAULT NULL COMMENT '平台',
           liveMounth varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL COMMENT '直播月份',
+          lineID varchar(100) DEFAULT NULL,
           PRIMARY KEY (dyRewardID)
         ) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb3;`;
         return cmd;
@@ -177,6 +178,7 @@ class SqlCmd {
           orderRetAmount float DEFAULT '0' COMMENT '带货退款金额',
           platform varchar(100) DEFAULT NULL COMMENT '平台',
           liveMounth varchar(100) DEFAULT NULL COMMENT '直播月份',
+          lineID varchar(100) DEFAULT NULL,
           PRIMARY KEY (wxRewardID)
         ) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb3;`;
         return cmd;
@@ -185,6 +187,7 @@ class SqlCmd {
         const cmd = `create or replace
         algorithm = UNDEFINED view daily_reward_view as
         select
+            wdr.lineID as lineID,
             wdr.liveDate as liveDate,
             wdr.liveMounth as liveMounth,
             wdr.nickName as nickName,
@@ -205,6 +208,7 @@ class SqlCmd {
             ((ai.OperationsTeam = oti.OperationsTeam)))
         union all
         select
+            ddr.lineID as lineID,
             ddr.liveDate as liveDate,
             ddr.liveMounth as liveMounth,
             ddr.nickName as nickName,
@@ -250,15 +254,29 @@ class SqlCmd {
     }
     insertDYDailyReward(dyDailyReward) {
         const cmd = `INSERT INTO ${this.dyDailyRewardTableName}
-        (nickName, anchorID, liveDate, liveDayNum, liveTime, liveEffectiveTime, maxWatchNum, dayAvgACU, liveRoomFlow, anchorGiftIncome, anchorTotalIncome, platform, liveMounth)
-        VALUES('${dyDailyReward.nickName}', '${dyDailyReward.anchorID}', '${dyDailyReward.liveDate}', ${dyDailyReward.liveDayNum}, ${dyDailyReward.liveTime}, ${dyDailyReward.liveEffectiveTime}, ${dyDailyReward.maxWatchNum}, ${dyDailyReward.dayAvgACU}, ${dyDailyReward.liveRoomFlow}, ${dyDailyReward.anchorGiftIncome}, ${dyDailyReward.anchorTotalIncome}, '${dyDailyReward.platform}', '${dyDailyReward.liveMounth}');`;
+        (lineID, nickName, anchorID, liveDate, liveDayNum, liveTime, liveEffectiveTime, maxWatchNum, dayAvgACU, liveRoomFlow, anchorGiftIncome, anchorTotalIncome, platform, liveMounth)
+        VALUES('${dyDailyReward.lineID}', '${dyDailyReward.nickName}', '${dyDailyReward.anchorID}', '${dyDailyReward.liveDate}', ${dyDailyReward.liveDayNum}, ${dyDailyReward.liveTime}, ${dyDailyReward.liveEffectiveTime}, ${dyDailyReward.maxWatchNum}, ${dyDailyReward.dayAvgACU}, ${dyDailyReward.liveRoomFlow}, ${dyDailyReward.anchorGiftIncome}, ${dyDailyReward.anchorTotalIncome}, '${dyDailyReward.platform}', '${dyDailyReward.liveMounth}');`;
+        return cmd;
+    }
+    // 更新抖音日记录表
+    updateDYDailyReward(dyDailyReward) {
+        const cmd = `UPDATE ${this.dyDailyRewardTableName}
+        SET nickName='${dyDailyReward.nickName}', anchorID='${dyDailyReward.anchorID}', liveDate='${dyDailyReward.liveDate}', liveDayNum=${dyDailyReward.liveDayNum}, liveTime=${dyDailyReward.liveTime}, liveEffectiveTime=${dyDailyReward.liveEffectiveTime}, maxWatchNum=${dyDailyReward.maxWatchNum}, dayAvgACU=${dyDailyReward.dayAvgACU}, liveRoomFlow=${dyDailyReward.liveRoomFlow}, anchorGiftIncome=${dyDailyReward.anchorGiftIncome}, anchorTotalIncome=${dyDailyReward.anchorTotalIncome}, platform='${dyDailyReward.platform}', liveMounth='${dyDailyReward.liveMounth}'
+        WHERE lineID='${dyDailyReward.lineID}';`;
         return cmd;
     }
     insertWXDailyReward(data) {
         const cmd = `INSERT INTO ${this.wxDailyRewardTableName}
-        (nickName, wxAnchorID, liveDate, adminName, liveDayNum, liveTime, liveEffectiveTime, watchNum, dayAvgACU, giftPersonNum, liveRoomFlow, anchorGiftIncome, anchorMicIncome, anchorRoomIncome, anchorTotalIncome, ordersNum, ordersAmount, orderRetNum, orderRetAmount, platform, liveMounth)
+        (lineID, nickName, wxAnchorID, liveDate, adminName, liveDayNum, liveTime, liveEffectiveTime, watchNum, dayAvgACU, giftPersonNum, liveRoomFlow, anchorGiftIncome, anchorMicIncome, anchorRoomIncome, anchorTotalIncome, ordersNum, ordersAmount, orderRetNum, orderRetAmount, platform, liveMounth)
         VALUES
-        ('${data.nickName}', '${data.wxAnchorID}', '${data.liveDate}', '${data.adminName}', ${data.liveDayNum}, ${data.liveTime}, ${data.liveEffectiveTime}, ${data.watchNum}, ${data.dayAvgACU}, ${data.giftPersonNum}, ${data.liveRoomFlow}, ${data.anchorGiftIncome}, ${data.anchorMicIncome}, ${data.anchorRoomIncome}, ${data.anchorTotalIncome}, ${data.ordersNum}, ${data.ordersAmount}, ${data.orderRetNum}, ${data.orderRetAmount}, '${data.platform}', '${data.liveMounth}');`;
+        ('${data.lineID}', '${data.nickName}', '${data.wxAnchorID}', '${data.liveDate}', '${data.adminName}', ${data.liveDayNum}, ${data.liveTime}, ${data.liveEffectiveTime}, ${data.watchNum}, ${data.dayAvgACU}, ${data.giftPersonNum}, ${data.liveRoomFlow}, ${data.anchorGiftIncome}, ${data.anchorMicIncome}, ${data.anchorRoomIncome}, ${data.anchorTotalIncome}, ${data.ordersNum}, ${data.ordersAmount}, ${data.orderRetNum}, ${data.orderRetAmount}, '${data.platform}', '${data.liveMounth}');`;
+        return cmd;
+    }
+    //更新微信日记录表
+    updateWXDailyReward(data) {
+        const cmd = `UPDATE ${this.wxDailyRewardTableName}
+        SET nickName='${data.nickName}', wxAnchorID='${data.wxAnchorID}', liveDate='${data.liveDate}', adminName='${data.adminName}', liveDayNum=${data.liveDayNum}, liveTime=${data.liveTime}, liveEffectiveTime=${data.liveEffectiveTime}, watchNum=${data.watchNum}, dayAvgACU=${data.dayAvgACU}, giftPersonNum=${data.giftPersonNum}, liveRoomFlow=${data.liveRoomFlow}, anchorGiftIncome=${data.anchorGiftIncome}, anchorMicIncome=${data.anchorMicIncome}, anchorRoomIncome=${data.anchorRoomIncome}, anchorTotalIncome=${data.anchorTotalIncome}, ordersNum=${data.ordersNum}, ordersAmount=${data.ordersAmount}, orderRetNum=${data.orderRetNum}, orderRetAmount=${data.orderRetAmount}, platform='${data.platform}', liveMounth='${data.liveMounth}'
+        WHERE lineID='${data.lineID}';`;
         return cmd;
     }
 }

@@ -97,7 +97,32 @@ app.post('/wxdailyreward', (req, res) => {
     }); 
   })
   .catch((error) => {
-    console.error(`get some error on post /livemessage : ${error}`)
+    console.error(`get some error on post /wxdailyreward : ${error}`)
+  });
+});
+
+// 接受上传的视频号数据，根据lineid更新数据
+
+app.post('/changewxdailyreward', (req, res) => {
+  const re = {} as ResponseData;
+
+  formatFromeWXDailyData(req.body)
+  .then((data) => {
+    sqlH.updateWXDailyReward(data)
+    .then(() => {
+      re.status = 0;
+      re.message = "weixin daily data update successfully!";
+      res.send(re);
+    })
+    .catch((error) => {
+      console.error(error);
+      re.status = -1;
+      re.message = `weixin daily data update error=>${error}`;
+      res.send(re);
+    }); 
+  })
+  .catch((error) => {
+    console.error(`get some error on post /changewxdailyreward : ${error}`)
   });
 });
 
@@ -122,7 +147,32 @@ app.post('/dydailyreward', (req, res) => {
     }); 
   })
   .catch((error) => {
-    console.error(`get some error on post /livemessage : ${error}`)
+    console.error(`get some error on post /dydailyreward : ${error}`)
+  });
+});
+
+// 接受上传的数据，更新数据库中的抖音日流水信息
+
+app.post('/changedydailyreward', (req, res) => {
+  const re = {} as ResponseData;
+
+  formatFromeDYDailyData(req.body)
+  .then((data) => {
+    sqlH.updateDYDailyReward(data)
+    .then(() => {
+      re.status = 0;
+      re.message = "douyin daily data update successfully!";
+      res.send(re);
+    })
+    .catch((error) => {
+      console.error(error);
+      re.status = -1;
+      re.message = `douyin daily data update error=>${error}`;
+      res.send(re);
+    }); 
+  })
+  .catch((error) => {
+    console.error(`get some error on post /changedydailyreward : ${error}`)
   });
 });
 

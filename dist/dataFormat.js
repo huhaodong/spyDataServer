@@ -103,6 +103,7 @@ function formatFromeWXDailyData(body) {
             ret.orderRetAmount = body.orderRetAmount;
             ret.platform = body.platform;
             ret.liveMounth = body.liveMounth;
+            ret.lineID = body.lineID;
             resolve(ret);
         }
         catch (error) {
@@ -129,6 +130,7 @@ function formatFromeDYDailyData(body) {
             ret.anchorTotalIncome = body.anchorTotalIncome;
             ret.platform = body.platform;
             ret.liveMounth = body.liveMounth;
+            ret.lineID = body.lineID;
             resolve(ret);
         }
         catch (error) {

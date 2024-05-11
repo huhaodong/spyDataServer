@@ -150,10 +150,36 @@ class MySQLHandler {
             });
         });
     }
+    // 更新抖音每日数据
+    updateDYDailyReward(data) {
+        return new Promise((resolve, reject) => {
+            this.connection.query(this.sqlCmd.updateDYDailyReward(data), (err, result) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
+    }
     // 插入视频号每日数据
     insertWXDailyReward(data) {
         return new Promise((resolve, reject) => {
             this.connection.query(this.sqlCmd.insertWXDailyReward(data), (err, result) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
+    }
+    // 更新视频号每日数据
+    updateWXDailyReward(data) {
+        return new Promise((resolve, reject) => {
+            this.connection.query(this.sqlCmd.updateWXDailyReward(data), (err, result) => {
                 if (err) {
                     reject(err);
                 }

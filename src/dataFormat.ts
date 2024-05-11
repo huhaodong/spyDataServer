@@ -61,6 +61,7 @@ export interface DYDailyRewardData{
     anchorTotalIncome:number;
     platform:string;
     liveMounth:string;
+    lineID:string;
 }
 
 // 视频号每日收益数据
@@ -86,6 +87,7 @@ export interface WXDailyRewardData{
     orderRetAmount:number;
     platform:string;
     liveMounth:string;
+    lineID:string;
 }
 
 export function formatFromAnchorInfo(body): Promise<AnchorInfo>{
@@ -181,6 +183,7 @@ export function formatFromeWXDailyData(body): Promise<WXDailyRewardData>{
             ret.orderRetAmount = body.orderRetAmount;
             ret.platform = body.platform;
             ret.liveMounth = body.liveMounth;
+            ret.lineID = body.lineID;
             resolve(ret);
         } catch (error) {
             reject(error);
@@ -206,6 +209,7 @@ export function formatFromeDYDailyData(body): Promise<DYDailyRewardData>{
             ret.anchorTotalIncome = body.anchorTotalIncome;
             ret.platform = body.platform;
             ret.liveMounth = body.liveMounth;
+            ret.lineID = body.lineID;
             resolve(ret);
         } catch (error) {
             reject(error);

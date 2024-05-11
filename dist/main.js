@@ -90,7 +90,29 @@ app.post('/wxdailyreward', (req, res) => {
         });
     })
         .catch((error) => {
-        console.error(`get some error on post /livemessage : ${error}`);
+        console.error(`get some error on post /wxdailyreward : ${error}`);
+    });
+});
+// 接受上传的视频号数据，根据lineid更新数据
+app.post('/changewxdailyreward', (req, res) => {
+    const re = {};
+    (0, dataFormat_1.formatFromeWXDailyData)(req.body)
+        .then((data) => {
+        sqlH.updateWXDailyReward(data)
+            .then(() => {
+            re.status = 0;
+            re.message = "weixin daily data update successfully!";
+            res.send(re);
+        })
+            .catch((error) => {
+            console.error(error);
+            re.status = -1;
+            re.message = `weixin daily data update error=>${error}`;
+            res.send(re);
+        });
+    })
+        .catch((error) => {
+        console.error(`get some error on post /changewxdailyreward : ${error}`);
     });
 });
 // 接受抖音mcn账号抓取的直播间数据并存储到MySQL
@@ -112,7 +134,29 @@ app.post('/dydailyreward', (req, res) => {
         });
     })
         .catch((error) => {
-        console.error(`get some error on post /livemessage : ${error}`);
+        console.error(`get some error on post /dydailyreward : ${error}`);
+    });
+});
+// 接受上传的数据，更新数据库中的抖音日流水信息
+app.post('/changedydailyreward', (req, res) => {
+    const re = {};
+    (0, dataFormat_1.formatFromeDYDailyData)(req.body)
+        .then((data) => {
+        sqlH.updateDYDailyReward(data)
+            .then(() => {
+            re.status = 0;
+            re.message = "douyin daily data update successfully!";
+            res.send(re);
+        })
+            .catch((error) => {
+            console.error(error);
+            re.status = -1;
+            re.message = `douyin daily data update error=>${error}`;
+            res.send(re);
+        });
+    })
+        .catch((error) => {
+        console.error(`get some error on post /changedydailyreward : ${error}`);
     });
 });
 // 接收客户端发送的主播属性数据并存储到MySQL
