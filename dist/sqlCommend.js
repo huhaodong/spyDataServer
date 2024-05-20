@@ -45,27 +45,27 @@ class SqlCmd {
           CurrentTimeStr varchar(35) DEFAULT NULL,
           LiveTimestamp bigint DEFAULT NULL,
           LiveTimestr varchar(25) DEFAULT NULL
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='保存所有微信视频号上的直播状态数据，条目众多，是实时数据';`;
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='保存所有微信视频号上的直播状态数据，条目众多，是实时数据';`;
         return cmd;
     }
     createLiveMessageTable() {
         const cmd = `CREATE TABLE IF NOT EXISTS ${this.liveMessageTableName} (
-          LiveID varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+          LiveID varchar(35) DEFAULT NULL,
           UserSeq int DEFAULT NULL,
-          UserOpenID varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+          UserOpenID varchar(255) DEFAULT NULL,
           UserNickname varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
           MessageTimestamp bigint DEFAULT NULL,
-          MessageDateStr varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-          MessageTimeStr varchar(35) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-          MessageType varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-          MessageContent text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='保存所有从微信视频号来的弹幕信息';`;
+          MessageDateStr varchar(35) DEFAULT NULL,
+          MessageTimeStr varchar(35) DEFAULT NULL,
+          MessageType varchar(25) DEFAULT NULL,
+          MessageContent text
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='保存所有从微信视频号来的弹幕信息';`;
         return cmd;
     }
     createAnchorInfo() {
         const cmd = `CREATE TABLE IF NOT EXISTS ${this.anchorInfoTableName} (
-          WechatUin varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-          Nickname varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+          WechatUin varchar(255) DEFAULT NULL,
+          Nickname varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
           Sex varchar(15) DEFAULT NULL,
           Age int DEFAULT NULL,
           SpervisorID int DEFAULT NULL,
@@ -90,21 +90,21 @@ class SqlCmd {
           PRIMARY KEY (Nickname),
           UNIQUE KEY anchor_info_unique (WechatUin),
           UNIQUE KEY anchor_info_unique_1 (DouyinUin)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='主播信息表';`;
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='主播信息表';`;
         return cmd;
     }
     createStaffInfo() {
         const cmd = `CREATE TABLE IF NOT EXISTS ${this.staffInfoTableName} (
           ID int NOT NULL AUTO_INCREMENT,
           Name varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-          Sex varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+          Sex varchar(15) DEFAULT NULL,
           Age int DEFAULT NULL,
-          Department varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-          TEL varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-          OpreationsTeam varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+          Department varchar(255) DEFAULT NULL,
+          TEL varchar(255) DEFAULT NULL,
+          OpreationsTeam varchar(255) DEFAULT NULL,
           OperationsTeamID int DEFAULT NULL,
           PRIMARY KEY (ID)
-        ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='员工信息，管理员信息';`;
+        ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COMMENT='员工信息，管理员信息';`;
         return cmd;
     }
     createOperationsTeamInfo() {
@@ -118,7 +118,7 @@ class SqlCmd {
     }
     createDailyReward() {
         const cmd = `CREATE TABLE IF NOT EXISTS ${this.dailyRewardTableName} (
-          LiveID varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+          LiveID varchar(255) NOT NULL,
           AnchorNickname varchar(255) DEFAULT "UNKNOW",
           ThePlatform varchar(100) DEFAULT NULL,
           Reward double DEFAULT '0',
@@ -126,8 +126,8 @@ class SqlCmd {
           NumberOfViewers int DEFAULT '0',
           Hyperlinks varchar(255) DEFAULT NULL,
           StartLiveTimestamp bigint DEFAULT NULL,
-          DateStr varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
-          MonthStr varchar(50) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+          DateStr varchar(50) DEFAULT NULL,
+          MonthStr varchar(50) DEFAULT NULL,
           EndLiveTimestamp bigint DEFAULT NULL,
           PRIMARY KEY (LiveID)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='这个表用来记录每日的流水信息，每场直播只会保留一条信息';`;
@@ -136,7 +136,7 @@ class SqlCmd {
     createDYDailyReward() {
         const cmd = `CREATE TABLE IF NOT EXISTS ${this.dyDailyRewardTableName} (
           dyRewardID int NOT NULL AUTO_INCREMENT COMMENT '抖音日记录ID',
-          nickName varchar(255) DEFAULT NULL COMMENT '主播别名',
+          nickName varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '主播别名',
           anchorID varchar(255) DEFAULT NULL COMMENT '主播抖音ID',
           liveDate varchar(100) DEFAULT NULL COMMENT '直播日期',
           liveDayNum int DEFAULT '0' COMMENT '有效直播天数',
@@ -148,7 +148,7 @@ class SqlCmd {
           anchorGiftIncome float DEFAULT '0' COMMENT '主播礼物收入',
           anchorTotalIncome float DEFAULT '0' COMMENT '主播总收入',
           platform varchar(100) DEFAULT NULL COMMENT '平台',
-          liveMounth varchar(100) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL COMMENT '直播月份',
+          liveMounth varchar(100) DEFAULT NULL COMMENT '直播月份',
           lineID varchar(100) DEFAULT NULL,
           PRIMARY KEY (dyRewardID)
         ) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb3;`;
@@ -158,9 +158,9 @@ class SqlCmd {
         const cmd = `CREATE TABLE IF NOT EXISTS ${this.wxDailyRewardTableName} (
           wxRewardID int NOT NULL AUTO_INCREMENT COMMENT 'ID标识',
           nickName varchar(255) NOT NULL COMMENT '主播姓名',
-          wxAnchorID varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL COMMENT '主播wxID',
+          wxAnchorID varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '主播wxID',
           liveDate varchar(100) DEFAULT NULL COMMENT '直播日期',
-          adminName varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT 'UNKNOW' COMMENT '管理者姓名',
+          adminName varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'UNKNOW' COMMENT '管理者姓名',
           liveDayNum int DEFAULT '0' COMMENT '有效直播天数',
           liveTime float DEFAULT '0' COMMENT '直播时长，包括无效时长',
           liveEffectiveTime float DEFAULT '0' COMMENT '有效直播时长',
